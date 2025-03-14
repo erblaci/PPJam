@@ -1,16 +1,25 @@
+using System;
 using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Vector3 movedir;
+   [SerializeField] private float movespeed;
+   [SerializeField] private Rigidbody rb;
+    
+    public void Update()
     {
-        
+        GetInput();
+        MovePlayer();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void MovePlayer()
     {
-        
+        rb.AddForce(movedir * movespeed);
+    }
+
+    private void GetInput()
+    {
+        movedir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
     }
 }
