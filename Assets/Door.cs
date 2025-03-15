@@ -8,7 +8,9 @@ public class Door : MonoBehaviour
     public float openSpeed = 3f;              // Speed of door movement
 
     [Header("Pressure Plates")]
-    public Button_Plate[] plates;          // Assign all pressure plates that control this door
+    public Button_Plate[] plates;
+
+    public Button_Behaviour[] buttons;// Assign all pressure plates that control this door
 
     private Vector3 closedPosition;
     private Vector3 openPosition;
@@ -46,6 +48,14 @@ public class Door : MonoBehaviour
             if (!plate.isPressed)
                 return false;
         }
+
+        
+            foreach (Button_Behaviour button in buttons)
+            {
+                if (!button.isPressed)
+                    return false;
+            }
+        
         return true;
     }
 

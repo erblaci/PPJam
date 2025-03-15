@@ -50,6 +50,7 @@ public class Player_Movement : MonoBehaviour
                         HoldedItem.transform.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                         HoldedItem.transform.gameObject.GetComponent<Rigidbody>().Sleep();
                         isHoldingItem = true;
+                        return;
                     }
                 }
             }
@@ -62,7 +63,22 @@ public class Player_Movement : MonoBehaviour
                 HoldedItem.transform.gameObject.GetComponent<Rigidbody>().WakeUp();
                 isHoldingItem = false;
             }
-           
+            RaycastHit[] hits2= Physics.SphereCastAll(transform.position,2f,transform.forward, 5f);
+
+            for (int i = 0; i < hits2.Length; i++)
+            {
+                if (hits2[i].collider.gameObject.layer == LayerMask.NameToLayer("Button"))
+                {
+                    if (hits2[i].transform.GetComponent<Button_Behaviour>()!=null)
+                    {
+                        Button_Behaviour b = hits2[i].transform.GetComponent<Button_Behaviour>();
+                        b.TurnOn();
+                    }
+                    
+                  
+                    return;
+                }
+            }
             
         }
        

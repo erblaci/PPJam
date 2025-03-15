@@ -1,12 +1,13 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Button_Plate : MonoBehaviour
+public class Button_Behaviour : MonoBehaviour
 {
-    public int objectsOnPlate = 0;
+   
     
     public List<Transform> points = new List<Transform>();
+    public int timer = -1;
     public bool isPressed = false;
     public LineRenderer lineRenderer;
     private void Awake()
@@ -23,27 +24,21 @@ public class Button_Plate : MonoBehaviour
        
     }
 
-    private void OnCollisionEnter(Collision other)
+   public void TurnOn()
     {
-        if (other.gameObject.layer==LayerMask.NameToLayer("Player")||other.gameObject.layer==LayerMask.NameToLayer("Boulder"))
+        if (timer==-1)
         {
-            objectsOnPlate++;
             isPressed = true;
         }
+        
     }
 
-    private void OnCollisionExit(Collision other)
+    public IEnumerator TurnOff()
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player")||other.gameObject.layer == LayerMask.NameToLayer("Boulder"))
-        {
-            objectsOnPlate--;
-            if (objectsOnPlate <= 0)
-            {
-                isPressed = false;
-            }
-        }
+        isPressed = true;
+        yield return new WaitForSeconds(timer);
+        isPressed = false;
     }
-
     private void Update()
     {
         if (isPressed)
