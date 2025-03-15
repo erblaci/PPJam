@@ -21,8 +21,25 @@ public class Player_Movement : MonoBehaviour
 
     void Update()
     {
+        Pickup();
         Move();
         Jump();
+    }
+
+    private void Pickup()
+    {
+        if (Input.GetKey(KeyCode.E))
+        {
+            RaycastHit[] hits= Physics.SphereCastAll(transform.position,3f,transform.forward, 10f);
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].collider.gameObject.layer == LayerMask.NameToLayer("Boulder"))
+                {
+                    Debug.Log("Picked up");
+                }
+            }
+        }
     }
 
     void Move()
@@ -31,13 +48,13 @@ public class Player_Movement : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         Vector3 moveDirection = cameraTransform.forward * vertical + cameraTransform.right * horizontal;
-        moveDirection.y = 0; // Prevent unwanted vertical movement
+        moveDirection.y = 0; 
         moveDirection.Normalize();
 
         Vector3 targetVelocity = moveDirection * moveSpeed;
         rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
 
-        // Rotate character in movement direction
+        
         if (moveDirection.magnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);

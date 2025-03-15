@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Button_Plate : MonoBehaviour
 {
+    public int objectsOnPlate = 0;
     public ButtonClass thisButton;
     public List<Transform> points = new List<Transform>();
     public bool isPressed = false;
@@ -24,14 +25,23 @@ public class Button_Plate : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        other.gameObject.layer = LayerMask.NameToLayer("Player");
-        isPressed = true;
+        if (other.gameObject.layer==LayerMask.NameToLayer("Player"))
+        {
+            objectsOnPlate++;
+            isPressed = true;
+        }
     }
 
     private void OnCollisionExit(Collision other)
     {
-        other.gameObject.layer = LayerMask.NameToLayer("Player");
-        isPressed = false;
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            objectsOnPlate--;
+            if (objectsOnPlate <= 0)
+            {
+                isPressed = false;
+            }
+        }
     }
 
     private void Update()
