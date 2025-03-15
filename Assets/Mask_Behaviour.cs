@@ -11,6 +11,7 @@ public class Mask_Behaviour : MonoBehaviour
     public bool IsStuck = false;
     private void Update()
     {
+        transform.LookAt(target.parent);
         Vector3 dir = (target.position - transform.position).normalized;
         if (Vector3.Distance(transform.position, target.position) > 0.5f)
         {

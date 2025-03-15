@@ -15,7 +15,7 @@ public class Button_Behaviour : MonoBehaviour
         
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = points.Count+1;
-        lineRenderer.SetPosition(0,transform.position);
+        lineRenderer.SetPosition(0,transform.position+transform.forward*-0.2f);
         for (int i = 0; i < points.Count; i++)
         {
             lineRenderer.SetPosition(i+1,points[i].position); 

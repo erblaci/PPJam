@@ -56,11 +56,13 @@ public class Door : MonoBehaviour
                     return false;
             }
         
+           
         return true;
     }
 
     void OpenDoor()
     {
+        Audio_Source.main.PlaySFX(1);
         StopAllCoroutines();
         StartCoroutine(MoveDoor(openPosition));
         isOpen = true;
@@ -75,6 +77,7 @@ public class Door : MonoBehaviour
 
     System.Collections.IEnumerator MoveDoor(Vector3 targetPosition)
     {
+        
         float elapsedTime = 0f;
         Vector3 startPosition = doorTransform.position;
 

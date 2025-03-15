@@ -1,21 +1,25 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
 {
+    [SerializeField] public Animator animator;
     public float moveSpeed = 5f;
-    public float jumpForce = 8f;
+    public float jumpForce = 5f;
     public float rotationSpeed = 10f;
     public float gravity = 9.81f;
     
     public Transform cameraTransform;
-
+    public Transform respawnPoint;
     private Rigidbody rb;
     private bool isGrounded;
     public bool isHoldingItem = false;
     public Transform ItemHolder;
     public GameObject HoldedItem;
+    public bool isPlayingSound = false;
 
     void Start()
     {
@@ -28,8 +32,26 @@ public class Player_Movement : MonoBehaviour
         Pickup();
         Move();
         Jump();
+        if (transform.position.y<-4)
+        {
+            Dead();
+        }
     }
 
+    public void Dead()
+    {
+        transform.position=respawnPoint.position;
+    }
+  /*  public IEnumerator PlaySound()
+    {
+        isPlayingSound = true;
+       Audio_Source.main.PlaySFX(0);
+       yield return new WaitForSeconds(3f);
+       Audio_Source.main.source.Stop();
+       isPlayingSound = false;
+    }*/
+
+    
     private void Pickup()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -63,7 +85,7 @@ public class Player_Movement : MonoBehaviour
                 HoldedItem.transform.gameObject.GetComponent<Rigidbody>().WakeUp();
                 isHoldingItem = false;
             }
-            RaycastHit[] hits2= Physics.SphereCastAll(transform.position,2f,transform.forward, 5f);
+            RaycastHit[] hits2= Physics.SphereCastAll(transform.position,1f,transform.forward, 3f);
 
             for (int i = 0; i < hits2.Length; i++)
             {
@@ -86,9 +108,23 @@ public class Player_Movement : MonoBehaviour
 
     void Move()
     {
+        
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+        if (Mathf.Abs(vertical)>0||Mathf.Abs(horizontal)>0)
+        {
+            animator.Play("Walking");
+        }
+        else
+        {
+            animator.Play("Idle");
+        }
 
+        if (Mathf.Abs(vertical)>0||Mathf.Abs(horizontal)>0&&!isPlayingSound)
+        {
+          //  StartCoroutine("PlaySound");
+           // isPlayingSound = false;
+        }
         Vector3 moveDirection = cameraTransform.forward * vertical + cameraTransform.right * horizontal;
         moveDirection.y = 0; 
         moveDirection.Normalize();
