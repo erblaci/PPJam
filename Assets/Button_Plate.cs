@@ -25,7 +25,7 @@ public class Button_Plate : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.layer==LayerMask.NameToLayer("Player"))
+        if (other.gameObject.layer==LayerMask.NameToLayer("Player")||other.gameObject.layer==LayerMask.NameToLayer("Boulder"))
         {
             objectsOnPlate++;
             isPressed = true;
@@ -34,7 +34,7 @@ public class Button_Plate : MonoBehaviour
 
     private void OnCollisionExit(Collision other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player")||other.gameObject.layer == LayerMask.NameToLayer("Boulder"))
         {
             objectsOnPlate--;
             if (objectsOnPlate <= 0)

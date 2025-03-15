@@ -1,4 +1,5 @@
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
@@ -12,6 +13,9 @@ public class Player_Movement : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
+    public bool isHoldingItem = false;
+    public Transform ItemHolder;
+    public GameObject HoldedItem;
 
     void Start()
     {
@@ -28,18 +32,40 @@ public class Player_Movement : MonoBehaviour
 
     private void Pickup()
     {
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            RaycastHit[] hits= Physics.SphereCastAll(transform.position,3f,transform.forward, 10f);
 
-            for (int i = 0; i < hits.Length; i++)
+            if (!isHoldingItem)
             {
-                if (hits[i].collider.gameObject.layer == LayerMask.NameToLayer("Boulder"))
+                RaycastHit[] hits= Physics.SphereCastAll(transform.position,3f,transform.forward, 10f);
+
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    Debug.Log("Picked up");
+                    if (hits[i].collider.gameObject.layer == LayerMask.NameToLayer("Boulder"))
+                    {
+                    
+                        HoldedItem = hits[i].collider.gameObject;
+                        HoldedItem.transform.position = ItemHolder.position;
+                        HoldedItem.transform.parent = ItemHolder;
+                        HoldedItem.transform.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                        HoldedItem.transform.gameObject.GetComponent<Rigidbody>().Sleep();
+                        isHoldingItem = true;
+                    }
                 }
             }
+            else if(isHoldingItem)
+            {
+                
+                HoldedItem.transform.position = ItemHolder.position+Vector3.up*1+transform.forward*0.5f;
+                HoldedItem.transform.parent = null;
+                HoldedItem.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                HoldedItem.transform.gameObject.GetComponent<Rigidbody>().WakeUp();
+                isHoldingItem = false;
+            }
+           
+            
         }
+       
     }
 
     void Move()
