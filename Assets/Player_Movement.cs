@@ -3,23 +3,63 @@ using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
 {
-    private Vector3 movedir;
-   [SerializeField] private float movespeed;
-   [SerializeField] private Rigidbody rb;
+    public float moveSpeed = 5f;
+    public float jumpForce = 8f;
+    public float rotationSpeed = 10f;
+    public float gravity = 9.81f;
     
-    public void Update()
+    public Transform cameraTransform;
+
+    private Rigidbody rb;
+    private bool isGrounded;
+
+    void Start()
     {
-        GetInput();
-        MovePlayer();
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; // Prevents unwanted rotation
     }
 
-    private void MovePlayer()
+    void Update()
     {
-        rb.AddForce(movedir * movespeed);
+        Move();
+        Jump();
     }
 
-    private void GetInput()
+    void Move()
     {
-        movedir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = cameraTransform.forward * vertical + cameraTransform.right * horizontal;
+        moveDirection.y = 0; // Prevent unwanted vertical movement
+        moveDirection.Normalize();
+
+        Vector3 targetVelocity = moveDirection * moveSpeed;
+        rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
+
+        // Rotate character in movement direction
+        if (moveDirection.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+        }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        isGrounded = true;
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
     }
 }
