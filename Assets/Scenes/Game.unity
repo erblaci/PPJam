@@ -2920,7 +2920,8 @@ MonoBehaviour:
   dialogText: {fileID: 158486811}
   dialouguebox: {fileID: 114668105}
   texts:
-  - Use W,A,S,D to move and hold right click to look around
+  - '"Human,Come here and help me" (W,A,S,D)  (Hold right click to look around))'
+  - '"Thank you.I''ll help you with your journal, I need help,I got no hands"'
   - Press E to interact with buttons or boulders
   - Press Space to Jump
   index: 0
