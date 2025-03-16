@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,8 +8,10 @@ public class Button_Plate : MonoBehaviour
     public int objectsOnPlate = 0;
     
     public List<Transform> points = new List<Transform>();
+    public bool isInverted = false;
     public bool isPressed = false;
     public LineRenderer lineRenderer;
+   public GameObject boulder = null;
     private void Awake()
     {
         
@@ -23,29 +26,98 @@ public class Button_Plate : MonoBehaviour
        
     }
 
-    private void OnCollisionEnter(Collision other)
+   private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.layer==LayerMask.NameToLayer("Player")||other.gameObject.layer==LayerMask.NameToLayer("Boulder"))
         {
+            if (other.gameObject.layer==LayerMask.NameToLayer("Boulder"))
+            {
+                boulder=other.gameObject;
+            }
             objectsOnPlate++;
-            isPressed = true;
+            if (isInverted)
+            {
+                isPressed = false;
+            }
+            else
+            {
+                isPressed = true;
+            }
+            
         }
     }
+
+    public IEnumerator Check()
+    {
+        yield return new WaitForSeconds(1f);
+        if (isInverted)
+        {
+            isPressed = true;
+        }
+        else
+        {
+            isPressed = false;
+        }
+    }
+
+   /* private void OnCollisionStay(Collision other)
+    {
+       
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") ||
+            other.gameObject.layer == LayerMask.NameToLayer("Boulder"))
+        {
+            if (isInverted)
+            {
+                isPressed = false;
+            }
+            else
+            {
+                isPressed = true;
+            }
+            StartCoroutine(Check());
+        }
+    }*/
 
     private void OnCollisionExit(Collision other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player")||other.gameObject.layer == LayerMask.NameToLayer("Boulder"))
         {
-            objectsOnPlate--;
+            if (other.gameObject.layer == LayerMask.NameToLayer("Boulder"))
+            {
+                boulder=null;
+            }
+
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                objectsOnPlate--;
+            }
+           
+            
             if (objectsOnPlate <= 0)
             {
-                isPressed = false;
+                if (isInverted)
+                {
+                    isPressed = true;
+                }
+                else
+                {
+                    isPressed = false;
+                }
             }
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        if (boulder == null&&isInverted)
+        {
+            isPressed = true;
+        }
+
+        if (objectsOnPlate<0)
+        {
+            objectsOnPlate = 0;
+        }
         if (isPressed)
         {
             lineRenderer.startColor = Color.green;

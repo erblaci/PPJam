@@ -30,7 +30,14 @@ public class Button_Behaviour : MonoBehaviour
         {
             isPressed = true;
         }
+        else
+        {
+            isPressed = true;
+            StartCoroutine(TurnOff());
+        }
+
         
+
     }
 
     public IEnumerator TurnOff()
