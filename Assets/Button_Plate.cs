@@ -12,6 +12,7 @@ public class Button_Plate : MonoBehaviour
     public bool isPressed = false;
     public LineRenderer lineRenderer;
    public GameObject boulder = null;
+   public bool IsPlayerOn = false;
     private void Awake()
     {
         
@@ -33,6 +34,11 @@ public class Button_Plate : MonoBehaviour
             if (other.gameObject.layer==LayerMask.NameToLayer("Boulder"))
             {
                 boulder=other.gameObject;
+            }
+
+            if (other.gameObject.layer==LayerMask.NameToLayer("Player"))
+            {
+                IsPlayerOn = true;
             }
             objectsOnPlate++;
             if (isInverted)
@@ -82,6 +88,10 @@ public class Button_Plate : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player")||other.gameObject.layer == LayerMask.NameToLayer("Boulder"))
         {
+            if (other.gameObject.layer==LayerMask.NameToLayer("Player"))
+            {
+                IsPlayerOn = false;
+            }
             if (other.gameObject.layer == LayerMask.NameToLayer("Boulder"))
             {
                 boulder=null;
@@ -109,10 +119,34 @@ public class Button_Plate : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (boulder == null&&isInverted)
+        if (boulder == null)
         {
-            isPressed = true;
+            if (isInverted)
+            {
+                if (IsPlayerOn)
+                {
+                    isPressed = false;
+                }
+                else
+                {
+                    isPressed = true;
+                }
+            }
+            else
+            {
+                if (IsPlayerOn)
+                {
+                    isPressed = true;
+                }
+                else
+                {
+                    isPressed = false;
+                }  
+            }
+            
+           
         }
+        
 
         if (objectsOnPlate<0)
         {

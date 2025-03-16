@@ -40,7 +40,7 @@ public class Player_Movement : MonoBehaviour
 
     public void Dead()
     {
-        transform.position=respawnPoint.position;
+        transform.position=Respawn_Manager.main.respawnPoints[Respawn_Manager.main.respawnPointIndex].position;
     }
   /*  public IEnumerator PlaySound()
     {
