@@ -59,7 +59,7 @@ public class Player_Movement : MonoBehaviour
 
             if (!isHoldingItem)
             {
-                RaycastHit[] hits= Physics.SphereCastAll(transform.position,3f,transform.forward, 10f);
+                RaycastHit[] hits= Physics.SphereCastAll(transform.position,2f,transform.forward, 4f);
 
                 for (int i = 0; i < hits.Length; i++)
                 {
